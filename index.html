@@ -96,19 +96,83 @@
             position: relative;
             z-index: 10;
         }
-
-        /* Schneeregler */
+        /* Gesamter Regler */
         #controls {
             position: fixed;
             right: 20px;
             bottom: 20px;
-            z-index: 60;
-            background: rgba(255, 255, 255, 0.9);
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
+            z-index: 99;
+            width: auto;
+        }
+
+        /* Toggle-Button — minimierter Zustand */
+        #controls-toggle {
+            background: rgb(255,212,1);
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+            display: block;
+            margin-left: auto;
+        }
+
+        /* Minimiert: sehr klein */
+        #controls-toggle.collapsed {
+            width: 110px;         /* sehr schmal */
+            padding: 6px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Wenn aufgeklappt → großer Button oben über dem Inhalt */
+        #controls.open #controls-toggle {
+            width: 230px;        /* volle Breite wie Regler */
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Regler-Content */
+        #controls-content {
+            display: none;
             width: 230px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+
+        /* Sichtbar wenn geöffnet */
+        #controls.open #controls-content {
+            display: block;
+        }
+
+        /* Minus / Plus Buttons */
+        #ctrl-row {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        #ctrl-row button {
+            background: rgb(255,212,1);
+            border:none;
+            padding:8px 12px;
+            font-size:18px;
+            border-radius:6px;
+            cursor:pointer;
+        }
+
+        #clearSnow {
+            margin-top:10px;
+            width:100%;
+            padding:10px;
+            background:rgb(255,212,1);
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-weight:bold;
         }
 
         #ctrl-row {
@@ -131,6 +195,7 @@
             text-align: center;
             font-size: 14px;
             font-weight: bold;
+            color: black;
         }
 
         #clearSnow {
@@ -300,14 +365,20 @@
 
 <canvas id="snowCanvas"></canvas>
 <canvas id="groundCanvas"></canvas>
-<!-- REGLER -->
+
 <div id="controls">
-    <div id="ctrl-row">
-        <button id="minus">−</button>
-        <span id="snow-mode-name">A kleis Schneele</span>
-        <button id="plus">+</button>
+
+    <button id="controls-toggle" class="collapsed">▼ Schneeregler</button>
+
+    <div id="controls-content">
+        <div id="ctrl-row">
+            <button id="minus">−</button>
+            <span id="snow-mode-name">A kleis Schneele</span>
+            <button id="plus">+</button>
+        </div>
+        <button id="clearSnow">Schnee schippen</button>
     </div>
-    <button id="clearSnow">Schnee schippen</button>
+
 </div>
 
 <!-- INHALT -->
@@ -602,6 +673,24 @@
   document.getElementById("clearSnow").onclick = () => {
     ground.fill(0);
   };
+
+  /* Schneeregler ein/ausklappen */
+  const controls = document.getElementById("controls");
+  const toggleBtn = document.getElementById("controls-toggle");
+  controls.classList.toggle("open", true);
+
+  toggleBtn.addEventListener("click", () => {
+
+    const isOpen = controls.classList.toggle("open");
+
+    if (isOpen) {
+      toggleBtn.textContent = "▲ Schneeregler";
+      toggleBtn.classList.remove("collapsed");
+    } else {
+      toggleBtn.textContent = "▼ Schneeregler";
+      toggleBtn.classList.add("collapsed");
+    }
+  });
 
   /* Jahr-Buttons Klick-Navigation */
   document.querySelectorAll('.year-btn').forEach(btn => {
