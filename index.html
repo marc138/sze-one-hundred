@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>honder kalte wender</title>
-
     <style>
         html, body { margin: 0; padding: 0; height: 100%; }
         body {
@@ -13,7 +12,6 @@
             color:white;
             overflow-x: hidden;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -35,13 +33,11 @@
             width: 230px;
             box-shadow: 0 0 8px rgba(0,0,0,0.4);
         }
-
         #ctrl-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         #ctrl-row button {
             background: rgb(255,212,1);
             border: none;
@@ -50,14 +46,12 @@
             border-radius: 6px;
             cursor: pointer;
         }
-
         #snow-mode-name {
             flex: 1;
             text-align: center;
             font-size: 14px;
             font-weight: bold;
         }
-
         #clearSnow {
             margin-top: 10px;
             width: 100%;
@@ -94,7 +88,6 @@
             z-index:20;
         }
         nav a { color:black; text-decoration:none; font-weight:bold; }
-
         .section { padding:40px 0; }
 
         .gallery {
@@ -105,7 +98,6 @@
             background:rgba(0,0,0,0.5);
             border-radius:10px;
         }
-
         .gallery img { height:150px; cursor:pointer; border-radius:6px; }
 
         .lightbox {
@@ -118,7 +110,6 @@
             justify-content:center;
             z-index:99;
         }
-
         .lightbox img { max-width:90%; max-height:90%; }
 
         .game-placeholder {
@@ -132,7 +123,6 @@
         }
     </style>
 </head>
-
 <body>
 
 <canvas id="snowCanvas"></canvas>
@@ -156,10 +146,12 @@
     </header>
 
     <nav>
-        <a href="#1920">1920er</a><a href="#1930">1930er</a><a href="#1940">1940er</a>
-        <a href="#1950">1950er</a><a href="#1960">1960er</a><a href="#1970">1970er</a>
-        <a href="#1980">1980er</a><a href="#1990">1990er</a><a href="#2000">2000er</a>
-        <a href="#2010">2010er</a><a href="#2020">2020er</a>
+        <a href="#1920">1920er</a><a href="#1930">1930er</a>
+        <a href="#1940">1940er</a><a href="#1950">1950er</a>
+        <a href="#1960">1960er</a><a href="#1970">1970er</a>
+        <a href="#1980">1980er</a><a href="#1990">1990er</a>
+        <a href="#2000">2000er</a><a href="#2010">2010er</a>
+        <a href="#2020">2020er</a>
     </nav>
 
     <div id="1920" class="section">
@@ -192,7 +184,6 @@
     <img id="lightbox-img">
 </div>
 
-
 <script>
   /* Lightbox */
   document.querySelectorAll('.gallery img').forEach(img=>{
@@ -205,7 +196,8 @@
     document.getElementById('lightbox').style.display="none";
   });
 
-  /* High Performance Schnee */
+  /* ---- High Performance Schneesystem (ohne Ladespinner!) ---- */
+
   const snowCanvas=document.getElementById("snowCanvas");
   const groundCanvas=document.getElementById("groundCanvas");
   const sctx=snowCanvas.getContext("2d");
@@ -218,13 +210,16 @@
   resize();
   window.addEventListener("resize",resize);
 
+  /* Boden */
   const GROUND_POINTS=300;
   let ground=new Array(GROUND_POINTS).fill(0);
+
+  /* Flocken */
   let flakes=[];
 
-  /* Weniger Flocken pro Zeit – aber größer */
+  /* Modi */
   const levelNames={
-    1:"Schneeflöckchen",
+    1:"Kein Schnee",
     2:"A kleis Schneele",
     3:"Schneegestöber",
     4:"Schneesturm",
@@ -233,47 +228,56 @@
 
   let snowLevel=2;
 
-  /* count = Anzahl Flocken pro Spawn
-     size  = max. Flockengröße */
   const intensity={
-    1:{count:1, size:5},
-    2:{count:1,   size:7},
-    3:{count:5,   size:9},
-    4:{count:11,   size:12},
-    5:{count:100,  size:14}
+    1:{count:0, size:0},
+    2:{count:1, size:7},
+    3:{count:4, size:8},
+    4:{count:10, size:10},
+    5:{count:25, size:12}
   };
 
+  /* Framebasierter Spawn — KEIN INTERVALL MEHR */
+  let frameCounter=0;
+
   function spawnFlakes(){
-    let set=intensity[snowLevel];
-    for(let i=0;i<set.count;i++){
+    const i=intensity[snowLevel];
+    for(let n=0;n<i.count;n++){
       flakes.push({
         x:Math.random()*snowCanvas.width,
         y:-10,
-        size:Math.random()*set.size + set.size/2,
-        speed:Math.random()*1+1
+        size:Math.random()*i.size + i.size/2,
+        speed:Math.random()*1 + 1
       });
     }
   }
 
+  /* Update */
   function updateFlakes(){
     flakes.forEach(f=>{
-      /* SCHNELLE FALLGESCHWINDIGKEIT */
       f.y += f.speed * f.size * 0.18;
-
-      let idx=Math.floor(f.x/snowCanvas.width*GROUND_POINTS);
+      let idx=Math.floor(f.x/snowCanvas.width * GROUND_POINTS);
       let g=ground[idx]||0;
 
       if(f.y > snowCanvas.height-g){
-        let h=f.size*0.2;
+        let h=f.size * 0.20;
         ground[idx]+=h;
         if(idx>0) ground[idx-1]+=h*0.5;
         if(idx<GROUND_POINTS-1) ground[idx+1]+=h*0.5;
         f.remove=true;
       }
     });
+
     flakes=flakes.filter(f=>!f.remove);
+
+    /* Wenn Schnee voll → automatisch stoppen */
+    let maxGround=Math.max(...ground);
+    if(maxGround>window.innerHeight-5){
+      snowLevel=1;
+      updateName();
+    }
   }
 
+  /* Draw */
   function drawFlakes(){
     sctx.clearRect(0,0,snowCanvas.width,snowCanvas.height);
     sctx.fillStyle="white";
@@ -298,32 +302,51 @@
     gctx.fill();
   }
 
+  /* Main Loop — KEIN LADESPINNER */
   function loop(){
+    frameCounter++;
+
+    /* Spawn nur alle 5 Frames (~12x pro Sek.) */
+    if(frameCounter>=5){
+      spawnFlakes();
+      frameCounter=0;
+    }
+
     updateFlakes();
     drawFlakes();
     drawGround();
+
     requestAnimationFrame(loop);
   }
   loop();
 
-  setInterval(()=>spawnFlakes(),50);
-
-  /* UI Steuerung */
+  /* UI */
   const nameField=document.getElementById("snow-mode-name");
-  function updateName(){ nameField.textContent=levelNames[snowLevel]; }
-  updateName();
+
+  function updateName(){
+    nameField.textContent=levelNames[snowLevel];
+  }
 
   document.getElementById("plus").onclick=()=>{
-    if(snowLevel<5){ snowLevel++; updateName(); }
+    if(snowLevel<5){
+      snowLevel++;
+      updateName();
+    }
   };
+
   document.getElementById("minus").onclick=()=>{
-    if(snowLevel>1){ snowLevel--; updateName(); }
+    if(snowLevel>1){
+      snowLevel--;
+      updateName();
+    }
   };
 
   document.getElementById("clearSnow").onclick=()=>{
     ground.fill(0);
   };
-</script>
 
+  updateName();
+
+</script>
 </body>
 </html>
