@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>honder kalte wender</title>
+
     <style>
-        html, body { margin: 0; padding: 0; height: 100%; }
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+        }
         body {
             font-family: Arial, sans-serif;
             background: rgb(2, 69, 141);
@@ -19,8 +22,6 @@
             position: relative;
             z-index: 10;
         }
-
-        /* Kompakter Schnee-Modus */
         #controls {
             position: fixed;
             right: 20px;
@@ -33,11 +34,7 @@
             width: 230px;
             box-shadow: 0 0 8px rgba(0,0,0,0.4);
         }
-        #ctrl-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        #ctrl-row { display: flex; justify-content: space-between; align-items: center; }
         #ctrl-row button {
             background: rgb(255,212,1);
             border: none;
@@ -62,8 +59,6 @@
             border-radius: 6px;
             font-weight: bold;
         }
-
-        /* Canvas */
         #snowCanvas, #groundCanvas {
             position: fixed;
             top: 0;
@@ -72,7 +67,6 @@
             height:100%;
             pointer-events:none;
         }
-
         #snowCanvas { z-index:1; }
         #groundCanvas { z-index:2; }
 
@@ -88,8 +82,8 @@
             z-index:20;
         }
         nav a { color:black; text-decoration:none; font-weight:bold; }
-        .section { padding:40px 0; }
 
+        .section { padding:40px 0; }
         .gallery {
             display:flex;
             gap:10px;
@@ -123,12 +117,12 @@
         }
     </style>
 </head>
+
 <body>
 
 <canvas id="snowCanvas"></canvas>
 <canvas id="groundCanvas"></canvas>
 
-<!-- Kompakte Steuerung -->
 <div id="controls">
     <div id="ctrl-row">
         <button id="minus">−</button>
@@ -146,11 +140,16 @@
     </header>
 
     <nav>
-        <a href="#1920">1920er</a><a href="#1930">1930er</a>
-        <a href="#1940">1940er</a><a href="#1950">1950er</a>
-        <a href="#1960">1960er</a><a href="#1970">1970er</a>
-        <a href="#1980">1980er</a><a href="#1990">1990er</a>
-        <a href="#2000">2000er</a><a href="#2010">2010er</a>
+        <a href="#1920">1920er</a>
+        <a href="#1930">1930er</a>
+        <a href="#1940">1940er</a>
+        <a href="#1950">1950er</a>
+        <a href="#1960">1960er</a>
+        <a href="#1970">1970er</a>
+        <a href="#1980">1980er</a>
+        <a href="#1990">1990er</a>
+        <a href="#2000">2000er</a>
+        <a href="#2010">2010er</a>
         <a href="#2020">2020er</a>
     </nav>
 
@@ -168,6 +167,14 @@
         <div class="gallery">
             <img src="https://via.placeholder.com/300x200?text=1930-1">
             <img src="https://via.placeholder.com/300x200?text=1930-2">
+        </div>
+    </div>
+
+    <div id="2020" class="section">
+        <h2>2020er</h2>
+        <div class="gallery">
+            <img src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F50.jpg?generation=1607795361610007&alt=media">
+            <img src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F18.jpg?generation=1607795310447440&alt=media">
         </div>
     </div>
 
@@ -196,28 +203,31 @@
     document.getElementById('lightbox').style.display="none";
   });
 
-  /* ---- High Performance Schneesystem (ohne Ladespinner!) ---- */
-
+  /* Schnee-System */
   const snowCanvas=document.getElementById("snowCanvas");
   const groundCanvas=document.getElementById("groundCanvas");
   const sctx=snowCanvas.getContext("2d");
   const gctx=groundCanvas.getContext("2d");
 
+  /* VOLLE AUFLÖSUNG */
   function resize(){
-    snowCanvas.width=groundCanvas.width=window.innerWidth;
-    snowCanvas.height=groundCanvas.height=window.innerHeight;
+    snowCanvas.width  = window.innerWidth;
+    snowCanvas.height = window.innerHeight;
+    groundCanvas.width  = window.innerWidth;
+    groundCanvas.height = window.innerHeight;
   }
   resize();
   window.addEventListener("resize",resize);
 
   /* Boden */
-  const GROUND_POINTS=300;
+  const GROUND_POINTS=100;
   let ground=new Array(GROUND_POINTS).fill(0);
 
   /* Flocken */
   let flakes=[];
+  let snowLevel=2;
 
-  /* Modi */
+  /* Schneemodi */
   const levelNames={
     1:"Kein Schnee",
     2:"A kleis Schneele",
@@ -226,17 +236,14 @@
     5:"Blizzard"
   };
 
-  let snowLevel=2;
-
   const intensity={
-    1:{count:0, size:0},
-    2:{count:1, size:7},
-    3:{count:4, size:8},
-    4:{count:10, size:10},
-    5:{count:25, size:12}
+    1:{count:0,  size:0},
+    2:{count:1,  size:7},
+    3:{count:3,  size:9},
+    4:{count:8,  size:12},
+    5:{count:15, size:16}
   };
 
-  /* Framebasierter Spawn — KEIN INTERVALL MEHR */
   let frameCounter=0;
 
   function spawnFlakes(){
@@ -246,46 +253,53 @@
         x:Math.random()*snowCanvas.width,
         y:-10,
         size:Math.random()*i.size + i.size/2,
-        speed:Math.random()*1 + 1
+        speed:Math.random()*1+1
       });
     }
   }
 
-  /* Update */
   function updateFlakes(){
     flakes.forEach(f=>{
-      f.y += f.speed * f.size * 0.18;
-      let idx=Math.floor(f.x/snowCanvas.width * GROUND_POINTS);
-      let g=ground[idx]||0;
+      f.y += f.speed * f.size * 0.23;
 
-      if(f.y > snowCanvas.height-g){
-        let h=f.size * 0.20;
-        ground[idx]+=h;
-        if(idx>0) ground[idx-1]+=h*0.5;
-        if(idx<GROUND_POINTS-1) ground[idx+1]+=h*0.5;
-        f.remove=true;
+      let idx = Math.floor(f.x / snowCanvas.width * GROUND_POINTS);
+      let g = ground[idx] || 0;
+
+      if(f.y > snowCanvas.height - g){
+        let h = f.size * 0.20;
+
+        ground[idx] += h;
+        if(idx > 0) ground[idx-1] += h * 0.4;
+        if(idx < GROUND_POINTS-1) ground[idx+1] += h * 0.4;
+
+        f.remove = true;
       }
     });
 
-    flakes=flakes.filter(f=>!f.remove);
+    flakes = flakes.filter(f => !f.remove);
 
-    /* Wenn Schnee voll → automatisch stoppen */
-    let maxGround=Math.max(...ground);
-    if(maxGround>window.innerHeight-5){
-      snowLevel=1;
+    /* ---- AUTO STOPP ---- */
+
+    // Durchschnittshöhe
+    let avg = ground.reduce((a,b)=>a+b,0) / GROUND_POINTS;
+
+    // 80% Bildschirmhöhe = voll
+    if (avg >= groundCanvas.height * 0.80){
+      snowLevel = 1;
       updateName();
     }
   }
 
-  /* Draw */
   function drawFlakes(){
     sctx.clearRect(0,0,snowCanvas.width,snowCanvas.height);
     sctx.fillStyle="white";
+
+    sctx.beginPath();
     flakes.forEach(f=>{
-      sctx.beginPath();
+      sctx.moveTo(f.x + f.size, f.y);
       sctx.arc(f.x,f.y,f.size,0,Math.PI*2);
-      sctx.fill();
     });
+    sctx.fill();
   }
 
   function drawGround(){
@@ -293,20 +307,19 @@
     gctx.fillStyle="white";
     gctx.beginPath();
     gctx.moveTo(0,groundCanvas.height);
+
     for(let i=0;i<GROUND_POINTS;i++){
       let x=i/(GROUND_POINTS-1)*groundCanvas.width;
       let y=groundCanvas.height-ground[i];
       gctx.lineTo(x,y);
     }
+
     gctx.lineTo(groundCanvas.width,groundCanvas.height);
     gctx.fill();
   }
 
-  /* Main Loop — KEIN LADESPINNER */
   function loop(){
     frameCounter++;
-
-    /* Spawn nur alle 5 Frames (~12x pro Sek.) */
     if(frameCounter>=5){
       spawnFlakes();
       frameCounter=0;
@@ -318,7 +331,7 @@
 
     requestAnimationFrame(loop);
   }
-  loop();
+  requestAnimationFrame(loop);
 
   /* UI */
   const nameField=document.getElementById("snow-mode-name");
@@ -326,27 +339,19 @@
   function updateName(){
     nameField.textContent=levelNames[snowLevel];
   }
+  updateName();
 
   document.getElementById("plus").onclick=()=>{
-    if(snowLevel<5){
-      snowLevel++;
-      updateName();
-    }
+    if(snowLevel<5){ snowLevel++; updateName(); }
   };
-
   document.getElementById("minus").onclick=()=>{
-    if(snowLevel>1){
-      snowLevel--;
-      updateName();
-    }
+    if(snowLevel>1){ snowLevel--; updateName(); }
   };
 
   document.getElementById("clearSnow").onclick=()=>{
     ground.fill(0);
   };
-
-  updateName();
-
 </script>
+
 </body>
 </html>
