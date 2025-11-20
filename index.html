@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>honder kalte wender</title>
+    <title>hondert kalde wender</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="logo_blue.svg">
 
     <style>
         html, body {
-            margin: 0; padding: 0; height: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100%;
         }
         body {
             font-family: Arial, sans-serif;
@@ -15,6 +20,26 @@
             color:white;
             overflow-x: hidden;
         }
+
+        /* Hintergrund-Logo */
+        #bgLogo {
+            position: fixed;
+
+           /* Höhe */
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 80vmin;
+            height: 80vmin;
+
+            background: url('logo_white_with_outline.svg') center/contain no-repeat;
+
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Hauptinhalt */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -22,6 +47,8 @@
             position: relative;
             z-index: 10;
         }
+
+        /* Kompakter Schneeregler */
         #controls {
             position: fixed;
             right: 20px;
@@ -34,7 +61,11 @@
             width: 230px;
             box-shadow: 0 0 8px rgba(0,0,0,0.4);
         }
-        #ctrl-row { display: flex; justify-content: space-between; align-items: center; }
+        #ctrl-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         #ctrl-row button {
             background: rgb(255,212,1);
             border: none;
@@ -59,6 +90,8 @@
             border-radius: 6px;
             font-weight: bold;
         }
+
+        /* Canvas */
         #snowCanvas, #groundCanvas {
             position: fixed;
             top: 0;
@@ -67,7 +100,7 @@
             height:100%;
             pointer-events:none;
         }
-        #snowCanvas { z-index:1; }
+        #snowCanvas { z-index:3; }
         #groundCanvas { z-index:2; }
 
         header { text-align:center; padding:40px 0; }
@@ -84,6 +117,7 @@
         nav a { color:black; text-decoration:none; font-weight:bold; }
 
         .section { padding:40px 0; }
+
         .gallery {
             display:flex;
             gap:10px;
@@ -120,9 +154,14 @@
 
 <body>
 
+<!-- Hintergrund-Logo -->
+<div id="bgLogo"></div>
+
+<!-- Schnee -->
+
 <canvas id="snowCanvas"></canvas>
 <canvas id="groundCanvas"></canvas>
-
+<!-- Steuerung -->
 <div id="controls">
     <div id="ctrl-row">
         <button id="minus">−</button>
@@ -132,10 +171,11 @@
     <button id="clearSnow">Schnee schippen</button>
 </div>
 
+<!-- Inhalt -->
 <div class="container">
 
     <header>
-        <h1>honder kalte wender</h1>
+        <h1>hondert kalde wender</h1>
         <p>100 Jahre Skizunft Endersbach</p>
     </header>
 
@@ -187,6 +227,7 @@
 
 </div>
 
+<!-- Lightbox -->
 <div class="lightbox" id="lightbox">
     <img id="lightbox-img">
 </div>
@@ -209,7 +250,6 @@
   const sctx=snowCanvas.getContext("2d");
   const gctx=groundCanvas.getContext("2d");
 
-  /* VOLLE AUFLÖSUNG */
   function resize(){
     snowCanvas.width  = window.innerWidth;
     snowCanvas.height = window.innerHeight;
@@ -219,15 +259,11 @@
   resize();
   window.addEventListener("resize",resize);
 
-  /* Boden */
   const GROUND_POINTS=100;
   let ground=new Array(GROUND_POINTS).fill(0);
-
-  /* Flocken */
   let flakes=[];
   let snowLevel=2;
 
-  /* Schneemodi */
   const levelNames={
     1:"Kein Schnee",
     2:"A kleis Schneele",
@@ -262,30 +298,24 @@
     flakes.forEach(f=>{
       f.y += f.speed * f.size * 0.23;
 
-      let idx = Math.floor(f.x / snowCanvas.width * GROUND_POINTS);
-      let g = ground[idx] || 0;
+      let idx=Math.floor(f.x/snowCanvas.width*GROUND_POINTS);
+      let g=ground[idx]||0;
 
       if(f.y > snowCanvas.height - g){
-        let h = f.size * 0.20;
-
-        ground[idx] += h;
-        if(idx > 0) ground[idx-1] += h * 0.4;
-        if(idx < GROUND_POINTS-1) ground[idx+1] += h * 0.4;
-
-        f.remove = true;
+        let h=f.size * 0.22;
+        ground[idx]+=h;
+        if(idx>0) ground[idx-1]+=h*0.4;
+        if(idx<GROUND_POINTS-1) ground[idx+1]+=h*0.4;
+        f.remove=true;
       }
     });
 
-    flakes = flakes.filter(f => !f.remove);
+    flakes=flakes.filter(f=>!f.remove);
 
-    /* ---- AUTO STOPP ---- */
-
-    // Durchschnittshöhe
+    /* AUTO STOPP bei 80% Logo-Freilegung */
     let avg = ground.reduce((a,b)=>a+b,0) / GROUND_POINTS;
-
-    // 80% Bildschirmhöhe = voll
-    if (avg >= groundCanvas.height * 0.80){
-      snowLevel = 1;
+    if(avg >= groundCanvas.height * 0.80){
+      snowLevel=1;
       updateName();
     }
   }
@@ -333,7 +363,7 @@
   }
   requestAnimationFrame(loop);
 
-  /* UI */
+  /* Steuerung */
   const nameField=document.getElementById("snow-mode-name");
 
   function updateName(){

@@ -1,0 +1,30 @@
+<svg width="512" height="512" viewBox="0 0 700 512"
+     xmlns="http://www.w3.org/2000/svg">
+
+    <style>
+        .ski {
+        stroke: rgb(255,255,255);
+        stroke-width: 28;
+        fill: none;
+        stroke-linecap: round;
+        }
+
+        .txt {
+        fill: rgb(255,255,255);           /* weißer Text */
+        stroke: rgb(2,69,141);            /* blaue Outline */
+        stroke-width: 4;
+        paint-order: stroke fill;
+        font-size: 58px;
+        font-family: "Comic Sans MS", cursive;
+        text-anchor: middle;
+        }
+    </style>
+
+    <!-- Skier: verschoben in die Mitte der breiteren Fläche -->
+    <line x1="230" y1="480" x2="422" y2="32" class="ski" />
+    <line x1="422" y1="480" x2="230" y2="32" class="ski" />
+
+    <!-- Text nun nicht mehr abgeschnitten -->
+    <text x="350" y="310" class="txt">hondertkaldewender</text>
+
+</svg>
