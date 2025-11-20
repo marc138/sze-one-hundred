@@ -5,89 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hondert kalde wender</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="logo_blue.svg">
 
     <style>
+
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
         }
+
         body {
             font-family: Arial, sans-serif;
             background: rgb(2, 69, 141);
-            color:white;
+            color: white;
             overflow-x: hidden;
         }
 
         /* Hintergrund-Logo */
         #bgLogo {
             position: fixed;
-
-           /* Höhe */
             top: 70%;
             left: 50%;
             transform: translate(-50%, -50%);
-
             width: 80vmin;
             height: 80vmin;
-
             background: url('logo_white_with_outline.svg') center/contain no-repeat;
-
             z-index: 1;
             pointer-events: none;
         }
 
-        /* Hauptinhalt */
+        /* Dezente linke Timeline fixiert */
+        #timeline-wrapper {
+            position: fixed;
+            top: 120px;
+            left: 20px; /* nah am Rand */
+            width: 40px;
+            height: calc(100vh - 150px);
+
+            background: rgba(0, 0, 0, 0.5); /* wie .gallery !!! */
+            border-radius: 10px; /* wie .gallery */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+
+            overflow-y: auto; /* scrollbar falls nötig */
+            padding: 10px;
+            z-index: 70;
+        }
+
+        /* Vertikale Liste */
+        #timeline {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        /* Dezente Jahres-Buttons */
+        .year-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7); /* dezenter weiß-Ton */
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.15s ease;
+            text-align: left;
+            padding: 4px 0;
+        }
+
+        /* Hover: leicht gelb */
+        .year-btn:hover {
+            color: rgb(255, 212, 1);
+            transform: translateX(3px);
+        }
+
+        /* Aktives Jahrzehnt beim Scrollen */
+        .year-btn.active {
+            color: rgb(255, 212, 1);
+        }
+
+        /* Hauptinhalt – nach rechts vergrößert */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding-left: 90px; /* Platz links für Zeitleiste */
+            padding-right: 20px;
+            padding-top: 40px;
             position: relative;
             z-index: 10;
         }
 
-        /* Kompakter Schneeregler */
+        /* Schneeregler */
         #controls {
             position: fixed;
             right: 20px;
             bottom: 20px;
-            z-index: 50;
-            background: rgba(255,255,255,0.9);
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.9);
             color: black;
             padding: 10px;
             border-radius: 10px;
             width: 230px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
         }
+
         #ctrl-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         #ctrl-row button {
-            background: rgb(255,212,1);
+            background: rgb(255, 212, 1);
             border: none;
             padding: 8px 12px;
             font-size: 18px;
             border-radius: 6px;
             cursor: pointer;
         }
+
         #snow-mode-name {
             flex: 1;
             text-align: center;
             font-size: 14px;
             font-weight: bold;
         }
+
         #clearSnow {
             margin-top: 10px;
             width: 100%;
             padding: 10px;
-            background: rgb(255,212,1);
+            background: rgb(255, 212, 1);
             border: none;
-            cursor: pointer;
             border-radius: 6px;
+            cursor: pointer;
             font-weight: bold;
         }
 
@@ -96,72 +149,158 @@
             position: fixed;
             top: 0;
             left: 0;
-            width:100%;
-            height:100%;
-            pointer-events:none;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
-        #snowCanvas { z-index:3; }
-        #groundCanvas { z-index:2; }
 
-        header { text-align:center; padding:40px 0; }
+        #snowCanvas {
+            z-index: 3;
+        }
+
+        #groundCanvas {
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
         nav {
-            display:flex;
-            justify-content:center;
-            gap:15px;
-            background:rgb(255,212,1);
-            padding:10px;
-            position:sticky;
-            top:0;
-            z-index:20;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: rgb(255, 212, 1);
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
         }
-        nav a { color:black; text-decoration:none; font-weight:bold; }
 
-        .section { padding:40px 0; }
+        nav a {
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+        }
 
+        .section {
+            padding: 20px 0;
+        }
+
+        /* Galerie */
         .gallery {
-            display:flex;
-            gap:10px;
-            overflow-x:auto;
-            padding:10px;
-            background:rgba(0,0,0,0.5);
-            border-radius:10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow-x: auto; /* optional – funktioniert weiter */
         }
-        .gallery img { height:150px; cursor:pointer; border-radius:6px; }
 
+        /* Bilder */
+        .gallery img {
+            height: 150px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Hochkant-Beschriftung */
+        .gallery-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            background: rgba(0, 0, 0, 0.5); /* SELBER Kasten wie Galerie! */
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            height: 150px; /* exakt wie Bildhöhe */
+            padding: 10px 6px; /* schöner Look */
+            border-radius: 10px 0 0 10px; /* links abgerundet */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0; /* verhindert Zusammenschrumpfen */
+            margin-right: 10px; /* Abstand zum ersten Bild */
+        }
+
+        /* Lightbox mit Navigation */
         .lightbox {
-            display:none;
-            position:fixed;
-            top:0; left:0;
-            width:100%; height:100%;
-            background:rgba(0,0,0,0.8);
-            align-items:center;
-            justify-content:center;
-            z-index:99;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 99;
         }
-        .lightbox img { max-width:90%; max-height:90%; }
 
-        .game-placeholder {
-            background:rgba(255,255,255,0.8);
-            color:black;
-            padding:60px;
-            font-size:24px;
-            text-align:center;
-            border-radius:12px;
-            margin-top:20px;
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
         }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 18px;
+            font-size: 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #prev-img {
+            left: 30px;
+        }
+
+        #next-img {
+            right: 30px;
+        }
+
     </style>
 </head>
 
 <body>
 
-<!-- Hintergrund-Logo -->
+<!-- ZEITLEISTE -->
+<div id="timeline-wrapper">
+    <div id="timeline">
+        <button class="year-btn" data-target="2020">2020</button>
+        <button class="year-btn" data-target="2010">2010</button>
+        <button class="year-btn" data-target="2000">2000</button>
+        <button class="year-btn" data-target="1990">1990</button>
+        <button class="year-btn" data-target="1980">1980</button>
+        <button class="year-btn" data-target="1970">1970</button>
+        <button class="year-btn" data-target="1960">1960</button>
+        <button class="year-btn" data-target="1950">1950</button>
+        <button class="year-btn" data-target="1940">1940</button>
+        <button class="year-btn" data-target="1930">1930</button>
+        <button class="year-btn" data-target="1920">1920</button>
+    </div>
+</div>
+
+<!-- LOGO -->
 <div id="bgLogo"></div>
 
-<!-- Schnee -->
+<!-- SCHNEE -->
 
 <canvas id="snowCanvas"></canvas>
 <canvas id="groundCanvas"></canvas>
-<!-- Steuerung -->
+<!-- REGLER -->
 <div id="controls">
     <div id="ctrl-row">
         <button id="minus">−</button>
@@ -171,7 +310,7 @@
     <button id="clearSnow">Schnee schippen</button>
 </div>
 
-<!-- Inhalt -->
+<!-- INHALT -->
 <div class="container">
 
     <header>
@@ -179,209 +318,325 @@
         <p>100 Jahre Skizunft Endersbach</p>
     </header>
 
-    <nav>
-        <a href="#1920">1920er</a>
-        <a href="#1930">1930er</a>
-        <a href="#1940">1940er</a>
-        <a href="#1950">1950er</a>
-        <a href="#1960">1960er</a>
-        <a href="#1970">1970er</a>
-        <a href="#1980">1980er</a>
-        <a href="#1990">1990er</a>
-        <a href="#2000">2000er</a>
-        <a href="#2010">2010er</a>
-        <a href="#2020">2020er</a>
-    </nav>
 
-    <div id="1920" class="section">
-        <h2>1920er</h2>
+    <div id="2020" class="section">
         <div class="gallery">
-            <img src="https://via.placeholder.com/300x200?text=1920-1">
-            <img src="https://via.placeholder.com/300x200?text=1920-2">
-            <img src="https://via.placeholder.com/300x200?text=1920-3">
+            <div class="gallery-label">2020er</div>
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F711.jpg?generation=1707148012587254&alt=media">
+        </div>
+    </div>
+
+    <div id="2010" class="section">
+        <div class="gallery">
+            <div class="gallery-label">2010er</div>
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F445.jpg?generation=1607795352676958&alt=media">
+        </div>
+    </div>
+
+    <div id="2000" class="section">
+        <div class="gallery">
+            <div class="gallery-label">2000er</div>
+        </div>
+    </div>
+
+    <div id="1990" class="section">
+        <div class="gallery">
+            <div class="gallery-label">1990er</div>
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F13.jpg?generation=1607795304956142&alt=media">
+        </div>
+    </div>
+
+    <div id="1980" class="section">
+        <div class="gallery">
+            <div class="gallery-label">1980er</div>
+        </div>
+    </div>
+
+    <div id="1970" class="section">
+        <div class="gallery">
+            <div class="gallery-label">1970er</div>
+        </div>
+    </div>
+
+    <div id="1960" class="section">
+        <div class="gallery">
+            <div class="gallery-label">1960er</div>
+        </div>
+    </div>
+
+    <div id="1950" class="section">
+        <div class="gallery">
+            <div class="gallery-label">1950er</div>
+        </div>
+    </div>
+
+    <div id="1940" class="section">
+        <div class="gallery">
+            <div class="gallery-label">1940er</div>
         </div>
     </div>
 
     <div id="1930" class="section">
-        <h2>1930er</h2>
         <div class="gallery">
-            <img src="https://via.placeholder.com/300x200?text=1930-1">
-            <img src="https://via.placeholder.com/300x200?text=1930-2">
+            <div class="gallery-label">1930er</div>
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F18.jpg?generation=1607795310447440&alt=media">
         </div>
     </div>
 
-    <div id="2020" class="section">
-        <h2>2020er</h2>
+    <div id="1920" class="section">
         <div class="gallery">
-            <img src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F50.jpg?generation=1607795361610007&alt=media">
-            <img src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F18.jpg?generation=1607795310447440&alt=media">
-        </div>
-    </div>
-
-    <div id="spiel" class="section">
-        <h2>Skislalom Spiel</h2>
-        <div class="game-placeholder">
-            Hier entsteht ein Atari‑Style Ski‑Slalom Spiel<br>(Platzhalter)
+            <div class="gallery-label">1920er</div>
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F50.jpg?generation=1607795361610007&alt=media">
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F715.jpg?generation=1707148020291386&alt=media">
+            <img loading="lazy"
+                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F716.jpg?generation=1707148022563667&alt=media">
         </div>
     </div>
 
 </div>
 
-<!-- Lightbox -->
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
+    <button id="prev-img" class="nav-btn">←</button>
     <img id="lightbox-img">
+    <button id="next-img" class="nav-btn">→</button>
 </div>
 
 <script>
-  /* Lightbox */
-  document.querySelectorAll('.gallery img').forEach(img=>{
-    img.addEventListener('click',()=>{
-      document.getElementById('lightbox-img').src=img.src;
-      document.getElementById('lightbox').style.display="flex";
+
+  /* Scroll zu Jahresabschnitt */
+  function scrollToYear(yearId) {
+    const el = document.getElementById(yearId);
+    if (el) {
+      window.scrollTo({top: el.offsetTop - 150, behavior: "smooth"});
+    }
+  }
+
+  /* Timeline progress */
+  const timelineProgress = document.getElementById("timeline-progress");
+  window.addEventListener("scroll", () => {
+    let docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    let scrolled = window.scrollY / docHeight;
+    timelineProgress.style.height = (scrolled * 100) + "%";
+  });
+
+  /* Lightbox + Navigation */
+  let allImages = [];
+  document.querySelectorAll('.gallery img').forEach(img => {
+    allImages.push(img.src);
+  });
+  let currentIndex = 0;
+
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+
+  document.querySelectorAll('.gallery img').forEach(img => {
+    img.addEventListener('click', () => {
+      currentIndex = allImages.indexOf(img.src);
+      lightboxImg.src = img.src;
+      lightbox.style.display = "flex";
     });
   });
-  document.getElementById('lightbox').addEventListener('click',()=>{
-    document.getElementById('lightbox').style.display="none";
+
+  document.getElementById("prev-img").onclick = (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+    lightboxImg.src = allImages[currentIndex];
+  };
+
+  document.getElementById("next-img").onclick = (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % allImages.length;
+    lightboxImg.src = allImages[currentIndex];
+  };
+
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) lightbox.style.display = "none";
   });
 
-  /* Schnee-System */
-  const snowCanvas=document.getElementById("snowCanvas");
-  const groundCanvas=document.getElementById("groundCanvas");
-  const sctx=snowCanvas.getContext("2d");
-  const gctx=groundCanvas.getContext("2d");
+  /* Schnee-System — unverändert */
 
-  function resize(){
-    snowCanvas.width  = window.innerWidth;
+  const snowCanvas = document.getElementById("snowCanvas");
+  const groundCanvas = document.getElementById("groundCanvas");
+  const sctx = snowCanvas.getContext("2d");
+  const gctx = groundCanvas.getContext("2d");
+
+  function resize() {
+    snowCanvas.width = window.innerWidth;
     snowCanvas.height = window.innerHeight;
-    groundCanvas.width  = window.innerWidth;
+    groundCanvas.width = window.innerWidth;
     groundCanvas.height = window.innerHeight;
   }
+
   resize();
-  window.addEventListener("resize",resize);
+  window.addEventListener("resize", resize);
 
-  const GROUND_POINTS=100;
-  let ground=new Array(GROUND_POINTS).fill(0);
-  let flakes=[];
-  let snowLevel=2;
+  const GROUND_POINTS = 100;
+  let ground = new Array(GROUND_POINTS).fill(0);
+  let flakes = [];
+  let snowLevel = 2;
 
-  const levelNames={
-    1:"Kein Schnee",
-    2:"A kleis Schneele",
-    3:"Schneegestöber",
-    4:"Schneesturm",
-    5:"Blizzard"
+  const levelNames = {
+    1: "Kein Schnee",
+    2: "A kleis Schneele",
+    3: "Schneegestöber",
+    4: "Schneesturm",
+    5: "Blizzard"
   };
 
-  const intensity={
-    1:{count:0,  size:0},
-    2:{count:1,  size:7},
-    3:{count:3,  size:9},
-    4:{count:8,  size:12},
-    5:{count:15, size:16}
+  const intensity = {
+    1: {count: 0, size: 0},
+    2: {count: 1, size: 7},
+    3: {count: 3, size: 9},
+    4: {count: 8, size: 12},
+    5: {count: 15, size: 16}
   };
+  let frameCounter = 0;
 
-  let frameCounter=0;
-
-  function spawnFlakes(){
-    const i=intensity[snowLevel];
-    for(let n=0;n<i.count;n++){
+  function spawnFlakes() {
+    const i = intensity[snowLevel];
+    for (let n = 0; n < i.count; n++) {
       flakes.push({
-        x:Math.random()*snowCanvas.width,
-        y:-10,
-        size:Math.random()*i.size + i.size/2,
-        speed:Math.random()*1+1
+        x: Math.random() * snowCanvas.width,
+        y: -10,
+        size: Math.random() * i.size + i.size / 2,
+        speed: Math.random() * 1 + 1
       });
     }
   }
 
-  function updateFlakes(){
-    flakes.forEach(f=>{
+  function updateFlakes() {
+
+    flakes.forEach(f => {
       f.y += f.speed * f.size * 0.23;
 
-      let idx=Math.floor(f.x/snowCanvas.width*GROUND_POINTS);
-      let g=ground[idx]||0;
+      let idx = Math.floor(f.x / snowCanvas.width * GROUND_POINTS);
+      let g = ground[idx] || 0;
 
-      if(f.y > snowCanvas.height - g){
-        let h=f.size * 0.22;
-        ground[idx]+=h;
-        if(idx>0) ground[idx-1]+=h*0.4;
-        if(idx<GROUND_POINTS-1) ground[idx+1]+=h*0.4;
-        f.remove=true;
+      if (f.y > snowCanvas.height - g) {
+        let h = f.size * 0.22;
+        ground[idx] += h;
+
+        if (idx > 0) ground[idx - 1] += h * 0.4;
+        if (idx < GROUND_POINTS - 1) ground[idx + 1] += h * 0.4;
+
+        f.remove = true;
       }
     });
 
-    flakes=flakes.filter(f=>!f.remove);
+    flakes = flakes.filter(f => !f.remove);
 
-    /* AUTO STOPP bei 80% Logo-Freilegung */
-    let avg = ground.reduce((a,b)=>a+b,0) / GROUND_POINTS;
-    if(avg >= groundCanvas.height * 0.80){
-      snowLevel=1;
+    let highest = Math.max(...ground);
+
+    if (highest >= groundCanvas.height * 0.80) {
+      snowLevel = 1;
       updateName();
     }
   }
 
-  function drawFlakes(){
-    sctx.clearRect(0,0,snowCanvas.width,snowCanvas.height);
-    sctx.fillStyle="white";
-
+  function drawFlakes() {
+    sctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+    sctx.fillStyle = "white";
     sctx.beginPath();
-    flakes.forEach(f=>{
+    flakes.forEach(f => {
       sctx.moveTo(f.x + f.size, f.y);
-      sctx.arc(f.x,f.y,f.size,0,Math.PI*2);
+      sctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
     });
     sctx.fill();
   }
 
-  function drawGround(){
-    gctx.clearRect(0,0,groundCanvas.width,groundCanvas.height);
-    gctx.fillStyle="white";
+  function drawGround() {
+    gctx.clearRect(0, 0, groundCanvas.width, groundCanvas.height);
+    gctx.fillStyle = "white";
     gctx.beginPath();
-    gctx.moveTo(0,groundCanvas.height);
-
-    for(let i=0;i<GROUND_POINTS;i++){
-      let x=i/(GROUND_POINTS-1)*groundCanvas.width;
-      let y=groundCanvas.height-ground[i];
-      gctx.lineTo(x,y);
+    gctx.moveTo(0, groundCanvas.height);
+    for (let i = 0; i < GROUND_POINTS; i++) {
+      let x = i / (GROUND_POINTS - 1) * groundCanvas.width;
+      let y = groundCanvas.height - ground[i];
+      gctx.lineTo(x, y);
     }
-
-    gctx.lineTo(groundCanvas.width,groundCanvas.height);
+    gctx.lineTo(groundCanvas.width, groundCanvas.height);
     gctx.fill();
   }
 
-  function loop(){
+  function loop() {
     frameCounter++;
-    if(frameCounter>=5){
+    if (frameCounter >= 5) {
       spawnFlakes();
-      frameCounter=0;
+      frameCounter = 0;
     }
-
     updateFlakes();
     drawFlakes();
     drawGround();
-
     requestAnimationFrame(loop);
   }
+
   requestAnimationFrame(loop);
 
-  /* Steuerung */
-  const nameField=document.getElementById("snow-mode-name");
+  const nameField = document.getElementById("snow-mode-name");
 
-  function updateName(){
-    nameField.textContent=levelNames[snowLevel];
+  function updateName() {
+    nameField.textContent = levelNames[snowLevel];
   }
+
   updateName();
 
-  document.getElementById("plus").onclick=()=>{
-    if(snowLevel<5){ snowLevel++; updateName(); }
+  document.getElementById("plus").onclick = () => {
+    if (snowLevel < 5) {
+      snowLevel++;
+      updateName();
+    }
   };
-  document.getElementById("minus").onclick=()=>{
-    if(snowLevel>1){ snowLevel--; updateName(); }
+  document.getElementById("minus").onclick = () => {
+    if (snowLevel > 1) {
+      snowLevel--;
+      updateName();
+    }
   };
-
-  document.getElementById("clearSnow").onclick=()=>{
+  document.getElementById("clearSnow").onclick = () => {
     ground.fill(0);
   };
-</script>
 
+  /* Jahr-Buttons Klick-Navigation */
+  document.querySelectorAll('.year-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 100,
+          behavior: "smooth"
+        });
+      }
+    });
+  });
+
+  /* Aktiv-Hervorhebung beim Scrollen */
+  function updateActiveYear() {
+    let years = document.querySelectorAll('.year-btn');
+    let sections = [...years].map(btn => document.getElementById(btn.dataset.target));
+
+    let scrollPos = window.scrollY + 200;
+
+    years.forEach(btn => btn.classList.remove('active'));
+
+    for (let i = 0; i < sections.length; i++) {
+      let sec = sections[i];
+      if (sec.offsetTop <= scrollPos &&
+        sec.offsetTop + sec.clientHeight > scrollPos) {
+        years[i].classList.add('active');
+      }
+    }
+  }
+
+  window.addEventListener("scroll", updateActiveYear);
+  updateActiveYear();
+
+</script>
 </body>
 </html>
