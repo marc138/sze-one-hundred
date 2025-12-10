@@ -46,6 +46,7 @@
             background: rgba(0, 0, 0, 0.5); /* wie .gallery !!! */
             border-radius: 10px; /* wie .gallery */
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px); /* leichte Glass-Optik */
 
             overflow-y: auto; /* scrollbar falls nötig */
             padding: 10px;
@@ -96,6 +97,7 @@
             position: relative;
             z-index: 10;
         }
+
         /* Gesamter Regler */
         #controls {
             position: fixed;
@@ -107,21 +109,21 @@
 
         /* Toggle-Button — minimierter Zustand */
         #controls-toggle {
-            background: rgb(255,212,1);
+            background: rgb(255, 212, 1);
             border: none;
             border-radius: 8px;
             padding: 6px 12px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
             display: block;
             margin-left: auto;
         }
 
         /* Minimiert: sehr klein */
         #controls-toggle.collapsed {
-            width: 110px;         /* sehr schmal */
+            width: 110px; /* sehr schmal */
             padding: 6px 0;
             font-size: 14px;
             text-align: center;
@@ -129,7 +131,7 @@
 
         /* Wenn aufgeklappt → großer Button oben über dem Inhalt */
         #controls.open #controls-toggle {
-            width: 230px;        /* volle Breite wie Regler */
+            width: 230px; /* volle Breite wie Regler */
             border-radius: 8px 8px 0 0;
         }
 
@@ -137,10 +139,10 @@
         #controls-content {
             display: none;
             width: 230px;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 0 0 8px 8px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
         }
 
         /* Sichtbar wenn geöffnet */
@@ -150,29 +152,29 @@
 
         /* Minus / Plus Buttons */
         #ctrl-row {
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         #ctrl-row button {
-            background: rgb(255,212,1);
-            border:none;
-            padding:8px 12px;
-            font-size:18px;
-            border-radius:6px;
-            cursor:pointer;
+            background: rgb(255, 212, 1);
+            border: none;
+            padding: 8px 12px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         #clearSnow {
-            margin-top:10px;
-            width:100%;
-            padding:10px;
-            background:rgb(255,212,1);
-            border:none;
-            border-radius:6px;
-            cursor:pointer;
-            font-weight:bold;
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            background: rgb(255, 212, 1);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         #ctrl-row {
@@ -260,8 +262,13 @@
             align-items: center;
             gap: 12px;
             padding: 10px;
+
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
+            backdrop-filter: blur(2px); /* leichte Glass-Optik */
+            border-radius: 10px; /* wie .gallery */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
             overflow-x: auto; /* optional – funktioniert weiter */
         }
 
@@ -316,7 +323,7 @@
             max-height: 80%;
         }
 
-        .nav-btn {
+        .nav-btn-lightbox {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -336,27 +343,87 @@
             right: 30px;
         }
 
+        /* SPA-Seiten: immer nur eine sichtbar */
+        .spa-page {
+            display: none;
+        }
+
+        .spa-page.active {
+            display: block;
+        }
+
+        /* SPA Navigation */
+        #main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+
+            position: sticky;
+            top: 0;
+            z-index: 40;
+
+            background: rgba(0, 0, 0, 0.25); /* sehr dezent, halbtransparent */
+            backdrop-filter: blur(2px); /* leichte Glass-Optik */
+            padding: 8px 10px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px; /* wie .gallery */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Buttons */
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15); /* nur leicht sichtbar */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+
+            cursor: pointer;
+            transition: background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.15s ease;
+        }
+
+        /* Hover */
+        .nav-btn:hover {
+            background: rgba(255, 212, 1, 0.25);
+            border-color: rgba(255, 212, 1, 0.6);
+            transform: translateY(-1px);
+        }
+
+        /* Aktive Seite */
+        .nav-btn.active {
+            background: rgba(255, 212, 1, 0.35);
+            border-color: rgb(255, 212, 1);
+            color: rgb(2, 69, 141);
+        }
+
+        /* Programmseite */
+        .page-section {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px); /* leichte Glass-Optik */
+            border-radius: 10px; /* wie .gallery */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .page-section h3 {
+            margin-top: 20px;
+            color: rgb(255, 212, 1);
+        }
+
     </style>
 </head>
 
 <body>
-
-<!-- ZEITLEISTE -->
-<div id="timeline-wrapper">
-    <div id="timeline">
-        <button class="year-btn" data-target="2020">2020</button>
-        <button class="year-btn" data-target="2010">2010</button>
-        <button class="year-btn" data-target="2000">2000</button>
-        <button class="year-btn" data-target="1990">1990</button>
-        <button class="year-btn" data-target="1980">1980</button>
-        <button class="year-btn" data-target="1970">1970</button>
-        <button class="year-btn" data-target="1960">1960</button>
-        <button class="year-btn" data-target="1950">1950</button>
-        <button class="year-btn" data-target="1940">1940</button>
-        <button class="year-btn" data-target="1930">1930</button>
-        <button class="year-btn" data-target="1920">1920</button>
-    </div>
-</div>
 
 <!-- LOGO -->
 <div id="bgLogo"></div>
@@ -389,94 +456,160 @@
         <p>100 Jahre Skizunft Endersbach</p>
     </header>
 
+    <nav id="main-nav">
+        <button class="nav-btn active" data-page="page-gallery">Galerie</button>
+        <button class="nav-btn" data-page="page-programm">Programm</button>
+        <button class="nav-btn" data-page="page-game">Spiel</button>
+    </nav>
 
-    <div id="2020" class="section">
-        <div class="gallery">
-            <div class="gallery-label">2020er</div>
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F711.jpg?generation=1707148012587254&alt=media">
-        </div>
-    </div>
+    <section id="page-gallery" class="spa-page active">
 
-    <div id="2010" class="section">
-        <div class="gallery">
-            <div class="gallery-label">2010er</div>
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F445.jpg?generation=1607795352676958&alt=media">
+        <div id="timeline-wrapper">
+            <div id="timeline">
+                <button class="year-btn" data-target="2020">2020</button>
+                <button class="year-btn" data-target="2010">2010</button>
+                <button class="year-btn" data-target="2000">2000</button>
+                <button class="year-btn" data-target="1990">1990</button>
+                <button class="year-btn" data-target="1980">1980</button>
+                <button class="year-btn" data-target="1970">1970</button>
+                <button class="year-btn" data-target="1960">1960</button>
+                <button class="year-btn" data-target="1950">1950</button>
+                <button class="year-btn" data-target="1940">1940</button>
+                <button class="year-btn" data-target="1930">1930</button>
+                <button class="year-btn" data-target="1920">1920</button>
+            </div>
         </div>
-    </div>
 
-    <div id="2000" class="section">
-        <div class="gallery">
-            <div class="gallery-label">2000er</div>
+        <div id="2020" class="section">
+            <div class="gallery">
+                <div class="gallery-label">2020er</div>
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F711.jpg?generation=1707148012587254&alt=media">
+            </div>
         </div>
-    </div>
 
-    <div id="1990" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1990er</div>
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F13.jpg?generation=1607795304956142&alt=media">
+        <div id="2010" class="section">
+            <div class="gallery">
+                <div class="gallery-label">2010er</div>
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F445.jpg?generation=1607795352676958&alt=media">
+            </div>
         </div>
-    </div>
 
-    <div id="1980" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1980er</div>
+        <div id="2000" class="section">
+            <div class="gallery">
+                <div class="gallery-label">2000er</div>
+            </div>
         </div>
-    </div>
 
-    <div id="1970" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1970er</div>
+        <div id="1990" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1990er</div>
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F13.jpg?generation=1607795304956142&alt=media">
+            </div>
         </div>
-    </div>
 
-    <div id="1960" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1960er</div>
+        <div id="1980" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1980er</div>
+            </div>
         </div>
-    </div>
 
-    <div id="1950" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1950er</div>
+        <div id="1970" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1970er</div>
+            </div>
         </div>
-    </div>
 
-    <div id="1940" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1940er</div>
+        <div id="1960" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1960er</div>
+            </div>
         </div>
-    </div>
 
-    <div id="1930" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1930er</div>
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F18.jpg?generation=1607795310447440&alt=media">
+        <div id="1950" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1950er</div>
+            </div>
         </div>
-    </div>
 
-    <div id="1920" class="section">
-        <div class="gallery">
-            <div class="gallery-label">1920er</div>
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F50.jpg?generation=1607795361610007&alt=media">
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F715.jpg?generation=1707148020291386&alt=media">
-            <img loading="lazy"
-                 src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F716.jpg?generation=1707148022563667&alt=media">
+        <div id="1940" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1940er</div>
+            </div>
         </div>
-    </div>
+
+        <div id="1930" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1930er</div>
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F18.jpg?generation=1607795310447440&alt=media">
+            </div>
+        </div>
+
+        <div id="1920" class="section">
+            <div class="gallery">
+                <div class="gallery-label">1920er</div>
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F50.jpg?generation=1607795361610007&alt=media">
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F715.jpg?generation=1707148020291386&alt=media">
+                <img loading="lazy"
+                     src="https://storage.googleapis.com/download/storage/v1/b/ssv-public-assets/o/ssvend%2Freq%2Fimages%2Fgallery%2F716.jpg?generation=1707148022563667&alt=media">
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- PAGE 2 : PROGRAMM -->
+    <section id="page-programm" class="spa-page">
+        <div class="page-section">
+            <h2>Jubiläumsprogramm</h2>
+
+            <h3>Freitag – Eröffnung</h3>
+            <ul>
+                <li>18:00 – Sektempfang</li>
+                <li>19:00 – Auftakt & Begrüßung</li>
+                <li>21:00 – Bilderjahrzehnte-Show</li>
+            </ul>
+
+            <h3>Samstag – Skitag</h3>
+            <ul>
+                <li>10:00 – Kinder-Skirennen</li>
+                <li>13:00 – Familienspiele im Schnee</li>
+                <li>20:00 – Festabend</li>
+            </ul>
+
+            <h3>Sonntag – Abschluss</h3>
+            <ul>
+                <li>09:00 – Gemeinsames Frühstück</li>
+                <li>11:00 – Winterwanderung</li>
+                <li>14:00 – Abschlussrede & Ausklang</li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- PAGE 3 : SPIEL -->
+    <section id="page-game" class="spa-page">
+        <div class="page-section">
+            <h2>Ski‑Slalom Spiel</h2>
+            <div class="game-placeholder">
+                <p>Hier entsteht ein Retro Ski‑Slalom Spiel.</p>
+                <p>(Platzhalter)</p>
+            </div>
+        </div>
+    </section>
 
 </div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
-    <button id="prev-img" class="nav-btn">←</button>
+    <button id="prev-img" class="nav-btn-lightbox">←</button>
     <img id="lightbox-img">
-    <button id="next-img" class="nav-btn">→</button>
+    <button id="next-img" class="nav-btn-lightbox">→</button>
 </div>
 
 <script>
@@ -563,9 +696,9 @@
 
   const intensity = {
     1: {count: 0, size: 0},
-    2: {count: 1, size: 7},
-    3: {count: 3, size: 9},
-    4: {count: 8, size: 12},
+    2: {count: 1, size: 5},
+    3: {count: 3, size: 7},
+    4: {count: 8, size: 11},
     5: {count: 15, size: 16}
   };
   let frameCounter = 0;
@@ -684,10 +817,10 @@
     const isOpen = controls.classList.toggle("open");
 
     if (isOpen) {
-      toggleBtn.textContent = "▲ Schneeregler";
+      toggleBtn.textContent = "▼ Schneeregler";
       toggleBtn.classList.remove("collapsed");
     } else {
-      toggleBtn.textContent = "▼ Schneeregler";
+      toggleBtn.textContent = "▲ Schneeregler";
       toggleBtn.classList.add("collapsed");
     }
   });
@@ -725,6 +858,27 @@
 
   window.addEventListener("scroll", updateActiveYear);
   updateActiveYear();
+
+  /* SPA Navigation */
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+
+      // Seiten ausblenden
+      document.querySelectorAll('.spa-page')
+        .forEach(p => p.classList.remove('active'));
+
+      // Buttons resetten
+      document.querySelectorAll('.nav-btn')
+        .forEach(n => n.classList.remove('active'));
+
+      // Zielseite aktivieren
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.page).classList.add('active');
+
+      // Scroll nach oben
+      window.scrollTo({top: 0, behavior: "smooth"});
+    });
+  });
 
 </script>
 </body>
