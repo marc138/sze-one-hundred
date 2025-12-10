@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hondert kalde wender</title>
+    <title>hondertkaldewender</title>
 
     <link rel="icon" type="image/svg+xml" href="logo_blue.svg">
 
@@ -452,7 +452,7 @@
 <div class="container">
 
     <header>
-        <h1>hondert kalde wender</h1>
+        <h1>hondertkaldewender</h1>
         <p>100 Jahre Skizunft Endersbach</p>
     </header>
 
@@ -664,8 +664,6 @@
     if (e.target === lightbox) lightbox.style.display = "none";
   });
 
-  /* Schnee-System — unverändert */
-
   const snowCanvas = document.getElementById("snowCanvas");
   const groundCanvas = document.getElementById("groundCanvas");
   const sctx = snowCanvas.getContext("2d");
@@ -681,7 +679,7 @@
   resize();
   window.addEventListener("resize", resize);
 
-  const GROUND_POINTS = 100;
+  const GROUND_POINTS = 50;
   let ground = new Array(GROUND_POINTS).fill(0);
   let flakes = [];
   let snowLevel = 2;
@@ -697,11 +695,12 @@
   const intensity = {
     1: {count: 0, size: 0},
     2: {count: 1, size: 5},
-    3: {count: 3, size: 7},
-    4: {count: 8, size: 11},
-    5: {count: 15, size: 16}
+    3: {count: 2, size: 7},
+    4: {count: 6, size: 11},
+    5: {count: 10, size: 20}
   };
   let frameCounter = 0;
+  let drawToggle = 0;
 
   function spawnFlakes() {
     const i = intensity[snowLevel];
@@ -710,7 +709,7 @@
         x: Math.random() * snowCanvas.width,
         y: -10,
         size: Math.random() * i.size + i.size / 2,
-        speed: Math.random() * 1 + 1
+        speed: Math.random() * 1 + 1,
       });
     }
   }
@@ -718,7 +717,7 @@
   function updateFlakes() {
 
     flakes.forEach(f => {
-      f.y += f.speed * f.size * 0.23;
+      f.y += f.speed * f.size * 0.7;
 
       let idx = Math.floor(f.x / snowCanvas.width * GROUND_POINTS);
       let g = ground[idx] || 0;
@@ -771,13 +770,22 @@
 
   function loop() {
     frameCounter++;
-    if (frameCounter >= 5) {
+    drawToggle++;
+    if (frameCounter >= 10) {
       spawnFlakes();
       frameCounter = 0;
     }
-    updateFlakes();
-    drawFlakes();
-    drawGround();
+
+    // Only update and draw every second frame for performance
+    if (drawToggle > 2) {
+      updateFlakes();
+      drawFlakes();
+    }
+
+    if (drawToggle > 6) {
+      drawGround();
+      drawToggle = 0;
+    }
     requestAnimationFrame(loop);
   }
 
