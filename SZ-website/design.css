@@ -1,0 +1,140 @@
+/*BOOTSTRAP_4_STYLE */
+#navbarSupportedContent ul li a {
+  color: #000000;
+  font-weight: 400;
+}
+
+#navbarSupportedContent ul li a.dropdown-item {
+  color: #000000;
+}
+
+#navbarSupportedContent .dropdown-menu {
+  background-color: #FFD401;
+}
+
+#title-content {
+  text-transform: uppercase;
+}
+
+a.btn-outline-primary {
+  border-color: #014789;
+  background-color: #014789;
+  color: #ffffff;
+}
+a.btn-outline-primary > i:before {
+  color: #ffffff;
+}
+a.btn-outline-primary:hover {
+  background-color: #00376A;
+  color: #ffffff;
+}
+
+a.btn-outline-light {
+  color: #ffffff;
+}
+
+@media all and (min-width: 992px) {
+  nav.custom-main-menu {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #navbarSupportedContent {
+    margin-top: 0;
+    width: 100%;
+    padding-left: 0;
+  }
+  #navbarSupportedContent ul.navbar-nav {
+    margin-left: 0;
+  }
+
+  #logo {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  #navbarSupportedContent .dropdown-menu {
+    background-color: #000000;
+  }
+
+  #navbarSupportedContent ul li a.dropdown-item {
+    color: #ffffff;
+  }
+}
+
+
+/* following styles are only for 'Jubiläumsgallerie' */
+.jubilee-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 600px;
+}
+
+.jubilee-gallery img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    object-position: center;
+    cursor: pointer;
+    display: block;
+}
+
+.jubilee-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.jubilee-lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    z-index: 9998;
+}
+
+.jubilee-nav {
+    position: absolute;
+    top: 50%;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    z-index: 9998;
+}
+
+.jubilee-prev { left: 20px; }
+.jubilee-next { right: 20px; }
+
+#jubilee-snow-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    display: none;
+    z-index: 3;
+}
+
+.jubilee-snowflake {
+    position: absolute;
+    top: -10px;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: jubilee-snowfall linear infinite;
+    z-index: 4;
+}
+
+@keyframes jubilee-snowfall {
+    from { transform: translateY(0); }
+    to   { transform: translateY(110vh); }
+}
+
+/* end of styles for 'Jubiläumsgallerie' */
+
+/* BOOTSTRAP_4_STYLE*/
