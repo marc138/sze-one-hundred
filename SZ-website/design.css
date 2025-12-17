@@ -5,81 +5,99 @@
 }
 
 #navbarSupportedContent ul li a.dropdown-item {
-  color: #000000;
+    color: #000000;
 }
 
 #navbarSupportedContent .dropdown-menu {
-  background-color: #FFD401;
+    background-color: #FFD401;
 }
 
 #title-content {
-  text-transform: uppercase;
+    text-transform: uppercase;
 }
 
 a.btn-outline-primary {
-  border-color: #014789;
-  background-color: #014789;
-  color: #ffffff;
+    border-color: #014789;
+    background-color: #014789;
+    color: #ffffff;
 }
 a.btn-outline-primary > i:before {
-  color: #ffffff;
+    color: #ffffff;
 }
 a.btn-outline-primary:hover {
-  background-color: #00376A;
-  color: #ffffff;
+    background-color: #00376A;
+    color: #ffffff;
 }
 
 a.btn-outline-light {
-  color: #ffffff;
+    color: #ffffff;
 }
 
 @media all and (min-width: 992px) {
   nav.custom-main-menu {
-    display: flex;
-    flex-direction: column;
+      display: flex;
   }
 
   #navbarSupportedContent {
-    margin-top: 0;
-    width: 100%;
-    padding-left: 0;
+    flex-direction: column;
+      margin-top: 0;
+      width: 100%;
   }
   #navbarSupportedContent ul.navbar-nav {
-    margin-left: 0;
+    padding-left: 0;
   }
 
   #logo {
-    width: 100%;
-    margin-top: 10px;
+    margin-left: 0;
+      width: 100%;
   }
 
   #navbarSupportedContent .dropdown-menu {
-    background-color: #000000;
+    margin-top: 10px;
   }
 
   #navbarSupportedContent ul li a.dropdown-item {
-    color: #ffffff;
+    background-color: #000000;
   }
+    color: #ffffff;
 }
+
 
 
 /* following styles are only for 'Jubiläumsgallerie' */
-.jubilee-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    max-width: 600px;
+
+/* Bars */
+#jubilee-bars {
+    padding: 20px;
 }
 
-.jubilee-gallery img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    object-position: center;
+.jubilee-bar {
+    margin-bottom: 25px;
+}
+
+.jubilee-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: rgb(2, 69, 141);
+}
+
+/* Scrollable lines */
+.jubilee-scroll {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #FFD805 rgb(230,230,230);
+}
+
+.jubilee-scroll img {
+    height: 120px;
+    margin-right: 10px;
+    border-radius: 4px;
     cursor: pointer;
-    display: block;
+    object-fit: cover;
 }
 
+/* Lightbox */
 .jubilee-lightbox {
     position: fixed;
     inset: 0;
@@ -87,54 +105,61 @@ a.btn-outline-light {
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 2;
+    z-index: 9000;
 }
 
-.jubilee-lightbox img {
-    max-width: 90%;
-    max-height: 90%;
-    z-index: 9998;
+#jubilee-lightbox-img {
+    position: relative;
+    z-index: 9002;
+    max-width: 90vw;
+    max-height: 90vh;
 }
 
+/* Navigation */
 .jubilee-nav {
     position: absolute;
     top: 50%;
-    font-size: 40px;
-    color: white;
+    color: #FFD805;
+    font-size: 50px;
     cursor: pointer;
-    user-select: none;
-    z-index: 9998;
+    z-index: 9003;
 }
 
 .jubilee-prev { left: 20px; }
 .jubilee-next { right: 20px; }
 
+#jubilee-autoplay-toggle {
+    position: absolute;
+    bottom: 20px;
+    background: #FFD805;
+    border: none;
+    padding: 10px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 9003;
+}
+
+/* Snow behind image */
 #jubilee-snow-container {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    overflow: hidden;
     display: none;
-    z-index: 3;
+    z-index: 9001;
 }
 
 .jubilee-snowflake {
     position: absolute;
     top: -10px;
-    width: 6px;
-    height: 6px;
     background: white;
     border-radius: 50%;
     opacity: 0.8;
     animation: jubilee-snowfall linear infinite;
-    z-index: 4;
 }
 
 @keyframes jubilee-snowfall {
     from { transform: translateY(0); }
-    to   { transform: translateY(110vh); }
+    to   { transform: translateY(100vh); }
 }
-
-/* end of styles for 'Jubiläumsgallerie' */
 
 /* BOOTSTRAP_4_STYLE*/
