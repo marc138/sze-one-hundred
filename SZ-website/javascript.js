@@ -68,7 +68,7 @@ function stopAutoplay() {
 
 autoplayToggle.onclick = () => {
   autoplay = !autoplay;
-  autoplayToggle.textContent = autoplay ? "⏸" : "▶︎";
+  autoplayToggle.textContent = autoplay ? "||" : "▶︎";
   autoplay ? startAutoplay() : stopAutoplay();
 };
 

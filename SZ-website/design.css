@@ -66,27 +66,42 @@ a.btn-outline-light {
 
 /* following styles are only for 'Jubiläumsgallerie' */
 
-/* Bars */
 #jubilee-bars {
     padding: 20px;
 }
 
 .jubilee-bar {
-    margin-bottom: 25px;
-}
-
-.jubilee-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: rgb(2, 69, 141);
-}
-
-/* Scrollable lines */
-.jubilee-scroll {
     display: flex;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #FFD805 rgb(230,230,230);
+    align-items: center;
+    background: #1f2730;
+    border: 2px solid rgb(2, 69, 141);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 25px;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.35);
+}
+
+/* Vertikale Jahreszahl */
+.jubilee-year {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFD805;
+    margin-right: 15px;
+    text-align: center;
+    user-select: none;
+}
+
+.jubilee-scroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #FFD805 rgb(230,230,230);
+  flex: 1;
+  padding-right: 30px;
+position: relative;
 }
 
 .jubilee-scroll img {
@@ -95,6 +110,19 @@ a.btn-outline-light {
     border-radius: 4px;
     cursor: pointer;
     object-fit: cover;
+}
+
+/* Scroll-Fade rechts */
+.jubilee-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(0,0,0,0.8), transparent);
+    pointer-events: none;
+    border-radius: 0 8px 8px 0;
 }
 
 /* Lightbox */
@@ -133,7 +161,8 @@ a.btn-outline-light {
     bottom: 20px;
     background: #FFD805;
     border: none;
-    padding: 10px 15px;
+    height: 50px;
+    width: 50px;
     font-weight: bold;
     cursor: pointer;
     z-index: 9003;
