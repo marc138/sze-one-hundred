@@ -30,7 +30,6 @@
             transform: translate(-50%, -50%);
             width: 80vmin;
             height: 80vmin;
-            background: url('logo_white_with_outline.svg') center/contain no-repeat;
             z-index: 1;
             pointer-events: none;
         }
@@ -420,6 +419,22 @@
             color: rgb(255, 212, 1);
         }
 
+        #snowRevealImage {
+          position: fixed;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+
+          width: 60vmin;       /* anpassen wie du möchtest */
+          height: auto;
+
+          z-index: 3;          /* über Boden, unter Schnee-Fall */
+          pointer-events: none;
+
+          clip-path: inset(100% 0 0 0);   /* komplett verborgen */
+          transition: clip-path 0.1s linear;
+      }
+
     </style>
 </head>
 
@@ -432,6 +447,7 @@
 
 <canvas id="snowCanvas"></canvas>
 <canvas id="groundCanvas"></canvas>
+<img id="snowRevealImage" src="hondertkaldewender.jpg" alt="">
 
 <div id="controls">
 
@@ -736,6 +752,15 @@
     flakes = flakes.filter(f => !f.remove);
 
     let highest = Math.max(...ground);
+
+    const revealImg = document.getElementById("snowRevealImage");
+
+    const imgHeight = revealImg.clientHeight;
+    const percent = (highest - 50) / imgHeight;
+    let clipTop = Math.max(0, 100 - percent * 100);
+    console.log('Image height:', imgHeight,'highest:', highest, 'Percent:', percent, 'ClipTop:', clipTop);
+
+    revealImg.style.clipPath = `inset(${clipTop}% 0 0 0)`;
 
     if (highest >= groundCanvas.height * 0.80) {
       snowLevel = 1;
